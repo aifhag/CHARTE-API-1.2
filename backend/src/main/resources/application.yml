@@ -1,0 +1,60 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: charte-backend
+  profiles:
+    default: dev
+  datasource:
+    url: ${SUPABASE_JDBC_URL:jdbc:postgresql://127.0.0.1:5432/postgres}
+    username: ${SUPABASE_DB_USER:}
+    password: ${SUPABASE_DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      connection-timeout: 5000
+      maximum-pool-size: 5
+  sql:
+    init:
+      mode: ${SPRING_SQL_INIT_MODE:never}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    show-sql: ${CHARTE_JPA_SHOW_SQL:false}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        # permite subir mesmo sem banco acessível (modo PostgREST/dev)
+        boot:
+          allow_jdbc_metadata_access: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  health:
+    db:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+charte:
+  supabase:
+    url: ${SUPABASE_URL:https://djvktcghevdtpdqdtcmx.supabase.co}
+    anon-key: ${SUPABASE_ANON_KEY:sb_publishable_RTmhpqNrIjUGd4adjmF7EA_xY2o3M8C}
+  security:
+    jwt-secret: ${SUPABASE_JWT_SECRET:super-secret-jwt-token-with-at-least-32-characters-long}
+  cors:
+    allowed-origins: ${CHARTE_CORS_ALLOWED_ORIGINS:${CHARTE_CORS_ALLOWED_ORIGIN:http://localhost:4200}}
+  payment:
+    provider: ${CHARTE_PAYMENT_PROVIDER:${PAYMENT_PROVIDER:mock}}
+    mock-checkout-base-url: ${CHARTE_PAYMENT_MOCK_CHECKOUT_URL:${MOCK_CHECKOUT_BASE_URL:http://localhost:4200/pedido}}
+    dev-confirm-token: ${CHARTE_PAYMENT_DEV_CONFIRM_TOKEN:${MOCK_PAYMENT_SIMULATION_TOKEN:dev-confirm-token}}

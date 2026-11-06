@@ -1,0 +1,46 @@
+@if ((modal.modalOpen$ | async) === 'subMenu') {
+  <div class="modal-overlay" (click)="modal.closeModal()">
+    <div class="home-menu" (click)="$event.stopPropagation()">
+      @if (auth.usuarioLogado$ | async; as usuario) {
+        <div class="user-header">
+          <img
+            class="user-avatar-sm"
+            [src]="usuario.fotoPerfil || 'assets/imagens/perfil.jpg'"
+            [alt]="usuario.nome"
+          />
+          <div class="user-info">
+            <strong class="user-name">{{ usuario.nomeArtistico || usuario.nome }}</strong>
+            <span class="user-handle">@{{ usuario.nomeUsuario }}</span>
+          </div>
+        </div>
+      }
+
+      <main>
+        @if (auth.usuarioLogado$ | async) {
+          <button type="button" (click)="irParaMeuPerfil()">Meu Perfil</button>
+        } @else {
+          <button type="button" (click)="abrirLogin()">Logar</button>
+          <button type="button" (click)="modal.openModal('artistLogin')">Sou artista</button>
+        }
+        <button type="button" (click)="irParaCarrinho('favoritos')">Favoritos</button>
+        <button type="button" (click)="irParaChat()">Chat</button>
+        <button type="button" (click)="alternarAjuda()">Ajuda</button>
+        @if (exibindoAjuda) {
+          <p style="font-size: 11px; color: #cbbdd2; padding: 6px 10px; margin: 0; line-height: 1.4;">
+            Dúvidas ou suporte acadêmico: <strong>suporte&#64;charte.art.br</strong>
+          </p>
+        }
+        @if (auth.usuarioLogado$ | async) {
+          <button type="button" class="btn-logout" (click)="logout()">Logout</button>
+        }
+      </main>
+
+      <footer>
+        <div class="lightOrDark">
+          <button type="button" aria-label="Tema claro" [attr.aria-pressed]="tema === 'claro'" [class.active]="tema === 'claro'" (click)="definirTema('claro')">☀️</button>
+          <button type="button" aria-label="Tema escuro" [attr.aria-pressed]="tema === 'escuro'" [class.active]="tema === 'escuro'" (click)="definirTema('escuro')">🌒</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+}
